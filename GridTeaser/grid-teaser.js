@@ -11,25 +11,6 @@ class GridTeaser {
         this.items = $$.qsa('.grid-teaser__item', this.el)
 
         this.onResizeDebounde = $$.debounce(this.onResize.bind(this), 10)
-
-        const markupExample = `
-<div class="grid-teaser" data-js-module="grid-teaser">
-    <div class="grid-teaser__item">
-        <div class="grid-teaser__teaser">
-            <div class="grid-teaser__content">
-                <h3>Teaser</h3>
-                <p class="small">Lorem ipsum dolor sit amet</p>
-                <p>Exercitationem ipsum neque quibusdam ratione recusandae tempore vel.</p>
-                <button class="btn btn--small" aria-expanded="false" aria-controls="c123-1">Mehr anzeigen</button>
-            </div>
-        </div>
-        <div id="c123-1" class="grid-teaser__more">
-            <p>Mehr Inhalt</p>
-            <p>Qui iusto quidem eaque non est iusto sit illo. Reiciendis commodi fuga officiis.</p>
-        </div>
-    </div>
-</div>
-`
     }
 
     initialize() {
