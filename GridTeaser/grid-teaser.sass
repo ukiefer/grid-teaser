@@ -1,0 +1,122 @@
+.grid-teaser
+  --_grid-teaser-clr-bg: pink
+  --_grid-teaser-item-width: 0
+
+  $this: &
+  $grid-teaser-width: 300px
+  $grid-teaser-gap: 16px
+  $grid-teaser-border-radius: 12px
+
+  position: relative
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax($grid-teaser-width, 1fr))
+  gap: $grid-teaser-gap
+
+  &__item
+    position: relative
+    transition: padding-bottom $transition-duration $transition-timing-function
+
+    &.on
+      --_grid-teaser-clr-bg: hotpink
+      padding-bottom: calc(100% + #{$grid-teaser-gap})
+
+    &.stay
+      padding-bottom: calc(100% + #{$grid-teaser-gap})
+      transition-duration: 0s !important
+
+  &__content
+    > :first-child
+      margin-top: 0
+
+    > :last-child
+      margin-bottom: 0
+
+  &__more
+    padding: $spacing-xs
+    display: none
+    position: absolute
+    top: calc(var(--_grid-teaser-item-width) + #{$grid-teaser-gap})
+    height: var(--_grid-teaser-item-width)
+    clip-path: inset(0 0 100% 0)
+    background-color: var(--_grid-teaser-clr-bg)
+    border-radius: $grid-teaser-border-radius
+    transition: clip-path $transition-duration $transition-timing-function
+
+    // Calculate left and width
+    @for $i from 1 through 9
+      #{$this}__item[data-pos="#{$i}"] &
+        left: calc(#{($i - 1) * -100%} - #{($i - 1) * $grid-teaser-gap})
+
+      #{$this}[data-columns="#{$i}"] &
+        width: calc(#{$i * 100%} + #{($i - 1) * $grid-teaser-gap})
+
+    #{$this}__item.on.do-clip &
+      transition-duration: $transition-duration - 10ms
+      clip-path: inset(0 0 0 0)
+
+    #{$this}__item.show-more &
+      display: block
+
+    #{$this}__item.stay &
+      transition-duration: 0s !important
+
+    #{$this}__item.stay.show-more &
+      transition-duration: $transition-duration - 10ms
+      clip-path: inset(0 0 0 0)
+
+  &__teaser
+    position: relative
+    padding: $spacing-xs
+    background-color: var(--_grid-teaser-clr-bg)
+    border-radius: 12px
+    aspect-ratio: 1
+    box-shadow: 0 0 0 0 var(--_grid-teaser-clr-bg)
+    transition: background-color $transition-duration $transition-timing-function, box-shadow $transition-duration * .25 $transition-timing-function
+
+    #{$this}__item.show-more &
+      box-shadow: 0 calc(var(--_grid-teaser-item-width) * .5) 0 0 var(--_grid-teaser-clr-bg)
+      transition-duration: $transition-duration
+
+    &::before,
+    &::after
+      $diameter: $grid-teaser-border-radius * 2
+      position: absolute
+      top: calc(var(--_grid-teaser-item-width) - #{$grid-teaser-gap * .5})
+      left: -$diameter
+      content: ''
+      width: $diameter
+      height: $diameter
+      background-image: radial-gradient(circle at 100% 100%, transparent #{$diameter}, var(--_grid-teaser-clr-bg) #{$diameter})
+      box-shadow: -1px -1px 0 0 var(--_grid-teaser-clr-bg)
+      opacity: 0
+      transform: rotate(180deg) translateX(-$grid-teaser-gap)
+      transition: none
+      pointer-events: none
+
+    &::before,
+    &::after
+      #{$this}__item.on &
+        transition: opacity $transition-duration $transition-timing-function, transform $transition-duration $transition-timing-function
+        opacity: 1
+
+      #{$this}__item.stay &
+        transition-delay: 0s
+
+    &::before
+      #{$this}__item[data-start] &
+        display: none
+
+      #{$this}__item.on &
+        transform: rotate(180deg) translateX(0)
+
+    &::after
+      left: auto
+      right: $grid-teaser-border-radius * -2
+      transform: rotate(180deg) scaleX(-1) translateX($grid-teaser-gap * -1)
+
+      #{$this}__item[data-end] &
+        display: none
+
+      #{$this}__item.on &
+        transform: rotate(180deg) scaleX(-1) translateX(0)
+
